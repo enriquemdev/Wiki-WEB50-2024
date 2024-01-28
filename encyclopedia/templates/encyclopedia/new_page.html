@@ -1,0 +1,30 @@
+{% extends 'encyclopedia/layout.html' %}
+
+{% block title %}
+    Create a new page
+{% endblock %}
+
+{% block body %}
+<div style="width: 99%;">
+    <div class="w-75 d-flex justify-content-center flex-column m-auto text-center">
+        <h1 class="mb-5">Create a new page</h1>
+    
+        <form action="{% url 'new_page' %}" method="POST">
+            {% csrf_token %}
+            
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="page_title" name="page_title" placeholder="name@example.com">
+                <label for="page_title">Title</label>
+              </div>
+    
+            <div class="form-floating mb-3">
+                <textarea class="form-control" placeholder="Write the content of the new page" id="page_content" style="height: 150px" name="page_content"></textarea>
+                <label for="page_content">Content</label>
+              </div>
+            
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+    </div>
+</div>
+    
+{% endblock %}

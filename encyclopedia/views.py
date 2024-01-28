@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, HttpResponseBadRequest
 
 from . import util
 
@@ -45,7 +45,36 @@ def search(request):
     search_results = []
     for entry in entries:
         result = entry.lower().find(searchedTitle.lower())
-        if result != -1: # find returns -1 when string doesnt contains substring
+        if result != -1:  # find returns -1 when string doesnt contains substring
             search_results.append(entry)
 
-    return render(request, "encyclopedia/index.html", {"entries": search_results, "search_param": searchedTitle})
+    return render(
+        request,
+        "encyclopedia/index.html",
+        {"entries": search_results, "search_param": searchedTitle},
+    )
+
+
+def new_page(request):
+    if request.method == "POST":
+        title = request.POST.get("page_title")
+        content = request.POST.get("page_content")
+
+        if util.get_entry(title) != None:
+            return HttpResponseBadRequest(
+                "400 ERROR: There is already a page with this title, try again with another one"
+            )
+
+        util.save_entry(title, content)
+
+        return render(
+            request,
+            "encyclopedia/entry.html",
+            {
+                "title": title,
+                "content": util.get_entry(title),
+            },
+        )
+    
+    # If it is a GET request 
+    return render(request, "encyclopedia/new_page.html")

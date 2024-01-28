@@ -13,6 +13,13 @@
       crossorigin="anonymous"
     />
     <link href="{% static 'encyclopedia/styles.css' %}" rel="stylesheet" />
+
+    <style>
+      html, body {
+        max-width: 100vw !important;
+        overflow-x: hidden;
+      }
+    </style>
   </head>
   <body>
     <div class="row">
@@ -29,7 +36,9 @@
         <div>
           <a href="{% url 'index' %}">Home</a>
         </div>
-        <div>Create New Page</div>
+        <div>
+          <a href="{% url 'new_page' %}">Create New Page</a>
+        </div>
         <div>Random Page</div>
         {% block nav %} {% endblock %}
       </div>
