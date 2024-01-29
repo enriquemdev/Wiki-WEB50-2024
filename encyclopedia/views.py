@@ -1,18 +1,19 @@
 from django.shortcuts import render
-from django.http import Http404, HttpResponse, HttpResponseBadRequest
+from django.http import Http404, HttpResponseBadRequest
+from markdown2 import Markdown
 
 from . import util
-
 import random
+markdowner = Markdown()
 
 def index(request):
     return render(request, "encyclopedia/index.html", {"entries": util.list_entries()})
 
 
 def show_entry(request, title):
-    entry = util.get_entry(title)
+    content = util.get_entry(title)
 
-    if entry == None:
+    if content == None:
         raise Http404()
 
     return render(
@@ -20,22 +21,22 @@ def show_entry(request, title):
         "encyclopedia/entry.html",
         {
             "title": title,
-            "content": entry,
+            "content": markdowner.convert(content),
         },
     )
 
 
 def search(request):
     searchedTitle = request.GET.get("q")
-    entry = util.get_entry(searchedTitle)
+    content = util.get_entry(searchedTitle)
 
-    if entry != None:
+    if content != None:
         return render(
             request,
             "encyclopedia/entry.html",
             {
                 "title": searchedTitle,
-                "content": entry,
+                "content": markdowner.convert(content),
             },
         )
 
@@ -114,6 +115,6 @@ def random_page(request):
         request, "encyclopedia/entry.html",
         {
             "title": random_page,
-            "content": util.get_entry(random_page),
+            "content": markdowner.convert(util.get_entry(random_page)),
         }
     )
