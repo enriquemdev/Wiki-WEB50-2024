@@ -74,7 +74,7 @@ def new_page(request):
             "encyclopedia/entry.html",
             {
                 "title": title,
-                "content": util.get_entry(title),
+                "content": markdowner.convert(util.get_entry(title)),
             },
         )
 
@@ -94,7 +94,7 @@ def edit_page(request, title):
             "encyclopedia/entry.html",
             {
                 "title": title,
-                "content": util.get_entry(title),
+                "content": markdowner.convert(util.get_entry(title)),
             },
         )
 
