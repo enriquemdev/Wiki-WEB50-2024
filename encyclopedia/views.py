@@ -3,6 +3,7 @@ from django.http import Http404, HttpResponse, HttpResponseBadRequest
 
 from . import util
 
+import random
 
 def index(request):
     return render(request, "encyclopedia/index.html", {"entries": util.list_entries()})
@@ -102,5 +103,17 @@ def edit_page(request, title):
         {
             "title": title,
             "content": util.get_entry(title),
+        }
+    )
+
+
+def random_page(request):
+    pages = util.list_entries()
+    random_page = random.choice(pages)
+    return render(
+        request, "encyclopedia/entry.html",
+        {
+            "title": random_page,
+            "content": util.get_entry(random_page),
         }
     )
