@@ -75,19 +75,15 @@ def new_page(request):
                 "content": util.get_entry(title),
             },
         )
-    
-    # If it is a GET request 
+
+    # If it is a GET request
     return render(request, "encyclopedia/new_page.html")
 
+
 # currently building
-def edit_page(request):
+def edit_page(request, title):
     if request.method == "POST":
         content = request.POST.get("page_content")
-
-        if util.get_entry(title) != None:
-            return HttpResponseBadRequest(
-                "400 ERROR: There is already a page with this title, try again with another one"
-            )
 
         util.save_entry(title, content)
 
@@ -99,6 +95,12 @@ def edit_page(request):
                 "content": util.get_entry(title),
             },
         )
-    
-    # If it is a GET request 
-    return render(request, "encyclopedia/new_page.html")
+
+    # If it is a GET request
+    return render(
+        request, "encyclopedia/edit_page.html",
+        {
+            "title": title,
+            "content": util.get_entry(title),
+        }
+    )
