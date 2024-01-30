@@ -4,21 +4,24 @@ class MarkdownParser:
     escaper = '\\'
     special_chars = ['#']
     
-    def __init__(self, md):
-        self.md = md
-        print('aaaa')
-        print(self.escaper)
-        self.mainn(md)
+    #def __init__(self):
+        #self.md = md
+        # print('aaaa')
+        # print(self.escaper)
+        # self.mainn(md)
         
         # if '\n' in md:
         #     print('aaaminirjirg')
         
         # https://www.markdownguide.org/cheat-sheet/
         # https://www.dataquest.io/blog/regex-cheatsheet/
+        # https://www.markdownguide.org/basic-syntax/
+        # https://www.w3schools.com/python/gloss_python_string_slice.asp
+        # https://www.w3schools.com/python/python_ref_string.asp
         
         
        # ^#{1,6} .+$|\*{2}.+\*{2}|^- .+$|    |^.+$
-    def mainn(self, md):
+    def htmlify(self, md):
         result = ''
         # Titulos | negritas | listas desordenadas | Links
         # \*{2}.+\*{2}|    |\[.+?\]\(.+?\)
@@ -37,7 +40,7 @@ class MarkdownParser:
         for text in str_list:
             if re.findall(r'^#{1,6} .+$', text):
                 result = result + self.processHeadings(text) + '\n'
-            elif re.findall(r'^- .+$', text):
+            elif re.findall(r'^- .+$|^\* .+$', text):
                 result = result + self.processListItems(text) + '\n'
             elif text != '':
                 result = result + self.processParagraphs(text) + '\n'
@@ -49,6 +52,7 @@ class MarkdownParser:
         result = self.processLinks(result)
         
         print(result)
+        return result
         # pattern = re.compile(r'\*{2}.+?\*{2}|\[.+?\]\(.+?\)', re.MULTILINE)
         # matches = pattern.findall(result)
         

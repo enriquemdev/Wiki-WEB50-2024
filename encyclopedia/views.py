@@ -1,11 +1,20 @@
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponseBadRequest
 from django.urls import reverse
-from markdown2 import Markdown
 
 from . import util
 import random
+
+### CHOOSE A MARKDOWN PARSER
+
+# puaj
+from markdown2 import Markdown
 markdowner = Markdown()
+
+# Homemade
+from mdparser import MarkdownParser
+mdparser = MarkdownParser()
+
 
 def index(request):
     return render(request, "encyclopedia/index.html", {"entries": util.list_entries()})
@@ -22,7 +31,7 @@ def show_entry(request, title):
         "encyclopedia/entry.html",
         {
             "title": title,
-            "content": markdowner.convert(content),
+            "content": mdparser.htmlify(content),
         },
     )
 
