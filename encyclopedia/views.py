@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponseBadRequest
+from django.urls import reverse
 from markdown2 import Markdown
 
 from . import util
@@ -31,14 +32,7 @@ def search(request):
     content = util.get_entry(searchedTitle)
 
     if content != None:
-        return render(
-            request,
-            "encyclopedia/entry.html",
-            {
-                "title": searchedTitle,
-                "content": markdowner.convert(content),
-            },
-        )
+        return redirect(reverse('show_entry', args=[searchedTitle]))
 
     # If entry doesnt exist, search for entries containing searchedTitle
     entries = util.list_entries()
@@ -69,14 +63,7 @@ def new_page(request):
 
         util.save_entry(title, content)
 
-        return render(
-            request,
-            "encyclopedia/entry.html",
-            {
-                "title": title,
-                "content": markdowner.convert(util.get_entry(title)),
-            },
-        )
+        return redirect(reverse('show_entry', args=[title]))
 
     # If it is a GET request
     return render(request, "encyclopedia/new_page.html")
@@ -89,14 +76,7 @@ def edit_page(request, title):
 
         util.save_entry(title, content)
 
-        return render(
-            request,
-            "encyclopedia/entry.html",
-            {
-                "title": title,
-                "content": markdowner.convert(util.get_entry(title)),
-            },
-        )
+        return redirect(reverse('show_entry', args=[title]))
 
     # If it is a GET request
     return render(
@@ -111,10 +91,4 @@ def edit_page(request, title):
 def random_page(request):
     pages = util.list_entries()
     random_page = random.choice(pages)
-    return render(
-        request, "encyclopedia/entry.html",
-        {
-            "title": random_page,
-            "content": markdowner.convert(util.get_entry(random_page)),
-        }
-    )
+    return redirect(reverse('show_entry', args=[random_page]))
